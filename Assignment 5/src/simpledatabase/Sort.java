@@ -43,7 +43,6 @@ public class Sort extends Operator{
 			
 			Type variableType = null;
 			
-			// get the position of the getting value
 			for(int i = 0; i < tuplesResult.get(0).getAttributeList().size(); i++){
 				if (tuplesResult.get(0).getAttributeList().get(i).getAttributeName().equals(orderPredicate)){
 					position = i;
@@ -56,8 +55,6 @@ public class Sort extends Operator{
 			if(variableType.type.equals(DataTypes.INTEGER) || variableType.type.equals(DataTypes.DOUBLE) 
 					|| variableType.type.equals(DataTypes.LONG) || variableType.type.equals(DataTypes.SHORT)
 					|| variableType.type.equals(DataTypes.FLOAT)){
-				//Collections.sort(tuplesResult, new NumberComparator());
-				
 				for(int i = 0; i < tuplesResult.size(); i++){
 					for(int j = 0; j < tuplesResult.size()-1; j++)
 						if(Integer.parseInt(tuplesResult.get(j).getAttributeList().get(position).getAttributeValue().toString()) 
@@ -66,8 +63,6 @@ public class Sort extends Operator{
 				}
 				
 			}else{
-				//Collections.sort(tuplesResult, new StringComparator());
-				
 				for(int i = 0; i < tuplesResult.size(); i++){
 					for(int j = 0; j < tuplesResult.size()-1; j++)
 						if(tuplesResult.get(j).getAttributeList().get(position).getAttributeValue().toString().compareTo( 
@@ -85,37 +80,6 @@ public class Sort extends Operator{
 		return null;
 	}
 	
-	class NumberComparator implements Comparator<Tuple>{
-		@Override
-		public int compare(Tuple o1, Tuple o2) {
-			// TODO Auto-generated method stub
-			int val1 = (int) o1.getAttributeList().get(position).getAttributeValue();
-			int val2 = (int) o2.getAttributeList().get(position).getAttributeValue();
-			return (val1 < val2 ? -1 : (val1 == val2 ? 0 : 1));
-		}
-	}
-	
-	class StringComparator implements Comparator<Tuple>{
-		@Override
-		public int compare(Tuple o1, Tuple o2) {
-			// TODO Auto-generated method stub
-			String val1 = o1.getAttributeList().get(position).getAttributeValue().toString();
-			String val2 = o2.getAttributeList().get(position).getAttributeValue().toString();
-			return val1.compareTo(val2);
-		}
-	}
-		
-	/*
-	public void printTuple(Tuple printTuple){
-		for(int i = 0; i < printTuple.attributeList.size(); i++){
-			if(printTuple.getAttributeName(i).equals("id")){
-				System.out.print("Attribute " + (i+1) +": ");
-				System.out.print("Attribute name: " +  printTuple.getAttributeName(i) + " / ");
-				System.out.print("Attribute type: " + printTuple.getAttributeType(i) + " / ");
-				System.out.println("Attribute value: " + printTuple.getAttributeValue(i));
-			}
-		}
-	}*/
 	
 	/**
      * The function is used to get the attribute list of the tuple
