@@ -8,10 +8,12 @@ public class Sort extends Operator{
 	
 	private ArrayList<Attribute> newAttributeList;
 	private String orderPredicate;
-	private Tuple tupleA, tupleB;
-	private int newIndex = 0;
-	private int index = 0;
 	ArrayList<Tuple> tuplesResult;
+	
+	
+	Tuple tupleA, tupleB;
+	int newIndex = 0;
+	int index = 0;
 	int position;
 	
 	
@@ -20,8 +22,6 @@ public class Sort extends Operator{
 		this.orderPredicate = orderPredicate;
 		newAttributeList = new ArrayList<Attribute>();
 		tuplesResult = new ArrayList<Tuple>();
-		
-		
 	}
 	
 	
@@ -41,7 +41,40 @@ public class Sort extends Operator{
 				tupleB = child.next();
 			}
 			
-			sortElement();
+			Type variableType = null;
+			
+			// get the position of the getting value
+			for(int i = 0; i < tuplesResult.get(0).getAttributeList().size(); i++){
+				if (tuplesResult.get(0).getAttributeList().get(i).getAttributeName().equals(orderPredicate)){
+					position = i;
+					variableType = tuplesResult.get(0).getAttributeList().get(i).getAttributeType();
+				}
+			}
+			
+			
+			// Sort the tuple arrayList according to the above criteria
+			if(variableType.type.equals(DataTypes.INTEGER) || variableType.type.equals(DataTypes.DOUBLE) 
+					|| variableType.type.equals(DataTypes.LONG) || variableType.type.equals(DataTypes.SHORT)
+					|| variableType.type.equals(DataTypes.FLOAT)){
+				//Collections.sort(tuplesResult, new NumberComparator());
+				
+				for(int i = 0; i < tuplesResult.size(); i++){
+					for(int j = 0; j < tuplesResult.size()-1; j++)
+						if(Integer.parseInt(tuplesResult.get(j).getAttributeList().get(position).getAttributeValue().toString()) 
+								> Integer.parseInt(tuplesResult.get(j+1).getAttributeList().get(position).getAttributeValue().toString()))
+							Collections.swap(tuplesResult, j, j+1);
+				}
+				
+			}else{
+				//Collections.sort(tuplesResult, new StringComparator());
+				
+				for(int i = 0; i < tuplesResult.size(); i++){
+					for(int j = 0; j < tuplesResult.size()-1; j++)
+						if(tuplesResult.get(j).getAttributeList().get(position).getAttributeValue().toString().compareTo( 
+								tuplesResult.get(j+1).getAttributeList().get(position).getAttributeValue().toString()) > 0)
+							Collections.swap(tuplesResult, j, j+1);
+				}
+			}
 			index++;
 		}
 		if(this.newIndex < tuplesResult.size()){
@@ -50,27 +83,6 @@ public class Sort extends Operator{
 			return tupleA;
 		}
 		return null;
-	}
-	
-	public void sortElement(){
-		Type variableType = null;
-		
-		// get the position of the getting value
-		for(int i = 0; i < tuplesResult.get(0).getAttributeList().size(); i++){
-			if (tuplesResult.get(0).getAttributeList().get(i).getAttributeName().equals(orderPredicate)){
-				position = i;
-				variableType = tuplesResult.get(0).getAttributeList().get(i).getAttributeType();
-			}
-		}
-		
-		// Sort the tuple arrayList according to the above criteria
-		if(variableType.type.equals(DataTypes.INTEGER) || variableType.type.equals(DataTypes.DOUBLE) 
-				|| variableType.type.equals(DataTypes.LONG) || variableType.type.equals(DataTypes.SHORT)
-				|| variableType.type.equals(DataTypes.FLOAT)){
-			Collections.sort(tuplesResult, new NumberComparator());
-		}else{
-			Collections.sort(tuplesResult, new StringComparator());
-		}
 	}
 	
 	class NumberComparator implements Comparator<Tuple>{
@@ -93,7 +105,18 @@ public class Sort extends Operator{
 		}
 	}
 		
-		
+	/*
+	public void printTuple(Tuple printTuple){
+		for(int i = 0; i < printTuple.attributeList.size(); i++){
+			if(printTuple.getAttributeName(i).equals("id")){
+				System.out.print("Attribute " + (i+1) +": ");
+				System.out.print("Attribute name: " +  printTuple.getAttributeName(i) + " / ");
+				System.out.print("Attribute type: " + printTuple.getAttributeType(i) + " / ");
+				System.out.println("Attribute value: " + printTuple.getAttributeValue(i));
+			}
+		}
+	}*/
+	
 	/**
      * The function is used to get the attribute list of the tuple
      * @return attribute list

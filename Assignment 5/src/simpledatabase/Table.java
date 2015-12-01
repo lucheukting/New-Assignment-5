@@ -9,10 +9,10 @@ public class Table extends Operator{
 	private BufferedReader br = null;
 	private boolean getAttribute=false;
 	private Tuple tuple;
-	private int index = 0;
-	private boolean readFile = false;
-	private String line, attributeLine, dataTypeLine;
-	private ArrayList<String> storeRecord = new ArrayList<String>();
+	public int index = 0;
+	
+	public String line, attributeLine, dataTypeLine;
+	public ArrayList<String> storeRecord = new ArrayList<String>();
 	
 	public Table(String from){
 		this.from = from;
@@ -36,7 +36,7 @@ public class Table extends Operator{
 	@Override
 	public Tuple next(){
 		//Delete the lines below and add your code here
-		if(!readFile){
+		if(!getAttribute){
 			try {
 				while ((line = br.readLine()) != null) {
 					if(this.index == 0){
@@ -48,7 +48,7 @@ public class Table extends Operator{
 					}
 					this.index++;
 				}
-				readFile = true;
+				getAttribute = true;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
